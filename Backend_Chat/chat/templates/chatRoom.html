@@ -6,4 +6,9 @@
 
 {% block content %}
     //chatRoom
+    <p>{{room_name}}</p>
+<script>
+    const room_name = "{{ room_name }}"
+    console.log(room_name)
+</script>
 {% endblock content %}

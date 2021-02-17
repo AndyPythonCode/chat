@@ -1,4 +1,6 @@
 """
+https://channels.readthedocs.io/en/stable/tutorial/part_2.html
+
 ASGI config for core project.
 
 It exposes the ASGI callable as a module-level variable named ``application``.
@@ -13,4 +15,24 @@ from django.core.asgi import get_asgi_application
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'core.settings')
 
-application = get_asgi_application()
+#Channels
+from channels.auth import AuthMiddlewareStack
+from channels.routing import ProtocolTypeRouter, URLRouter
+import chat.routing as chat
+
+application = ProtocolTypeRouter({
+  "http": get_asgi_application(),
+  "websocket": AuthMiddlewareStack(
+        URLRouter(
+            chat.websocket_urlpatterns
+        )
+    ),
+})
+
+"""
+Esta configuración de enrutamiento raíz especifica que cuando se realiza una conexión con el servidor de desarrollo de Canales, ProtocolTypeRouterprimero inspeccionará el tipo de conexión. Si se trata de una conexión WebSocket ( ws: // o wss: // ), la conexión se dará al AuthMiddlewareStack.
+
+El completará AuthMiddlewareStackel alcance de la conexión con una referencia al usuario actualmente autenticado, similar a cómo Django AuthenticationMiddlewarellena el objeto de solicitud de una función de vista con el usuario actualmente autenticado. (Los alcances se discutirán más adelante en este tutorial). Luego, se le dará la conexión al URLRouter.
+
+El URLRouterexaminará la ruta HTTP de la conexión a la ruta a un consumidor en particular, sobre la base de las previstas urlpatrones.
+"""
