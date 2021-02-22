@@ -18,15 +18,17 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'core.settings')
 #Channels
 from channels.auth import AuthMiddlewareStack
 from channels.routing import ProtocolTypeRouter, URLRouter
+from channels.security.websocket import AllowedHostsOriginValidator
 import chat.routing as chat
 
 application = ProtocolTypeRouter({
-  "http": get_asgi_application(),
-  "websocket": AuthMiddlewareStack(
+  "websocket": AllowedHostsOriginValidator( #restrict domain 'security', ALLOWED_HOSTS in setting.py
+      AuthMiddlewareStack( #self.scope, it's give you some information
         URLRouter(
-            chat.websocket_urlpatterns
-        )
-    ),
+            chat.websocket_urlpatterns #Where it's the url that i have to match when i call a socket
+            )
+        ),
+    ) 
 })
 
 """

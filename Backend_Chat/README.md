@@ -13,3 +13,5 @@
     Channels  le proporciona Consumers , una rica abstracción que le permite crear aplicaciones ASGI fácilmente. Los consumidores hacen un par de cosas en particular: estructuran su código como una serie de funciones que se llamarán cada vez que ocurre un evento, en lugar de hacer que escriba un bucle de eventos.
 
     Un Consumers es una clase cuyos métodos puede elegir escribir como funciones normales de Python (sincrónicas) o como esperables (asincrónicas). El código asincrónico no debe mezclarse con el código sincrónico. Así que hay funciones de conversión para convertir de asincrónico a sincronizado y viceversa. Recuerde que las partes de Django son sincrónicas.
+
+* Documentacion: https://channels.readthedocs.io/en/stable/installation.html
