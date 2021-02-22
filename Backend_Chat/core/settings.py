@@ -87,6 +87,23 @@ DATABASES = {
     }
 }
 
+#Channel layers le permite hablar entre diferentes instancias de una aplicación
+#in-memory data structure store, utilizado como base de datos, caché y agente de mensajes.
+CHANNEL_LAYERS = {
+#'Memurai' es el único almacén de datos nativo de Windows compatible con Redis que ofrece soporte de nivel empresarial 24/7.
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+        },
+    },
+}
+
+"""
+_Desempeño increíblemente rápido de redis_
+Todos los datos de Redis se encuentran en la memoria principal del servidor, a diferencia de la mayoría de sistemas de administración de bases de datos, que almacenan los datos en el disco o en SSD. Al eliminar la necesidad de acceder a discos, las bases de datos en memoria como Redis evitan los retrasos y pueden acceder a los datos con algoritmos más sencillos que utilizan menos instrucciones de la CPU. Las operaciones típicas tardan menos de un milisegundo en ejecutarse.
+"""
+
 #User model
 AUTH_USER_MODEL = 'user.MyUser'
 
