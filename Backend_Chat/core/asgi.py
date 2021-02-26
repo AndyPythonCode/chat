@@ -22,7 +22,8 @@ from channels.security.websocket import AllowedHostsOriginValidator
 import chat.routing as chat
 
 application = ProtocolTypeRouter({
-  "websocket": AllowedHostsOriginValidator( #restrict domain 'security', ALLOWED_HOSTS in setting.py
+    "http": get_asgi_application(),
+    "websocket": AllowedHostsOriginValidator( #restrict domain 'security', ALLOWED_HOSTS in setting.py
       AuthMiddlewareStack( #self.scope, it's give you some information
         URLRouter(
             chat.websocket_urlpatterns #Where it's the url that i have to match when i call a socket
