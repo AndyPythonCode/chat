@@ -1,4 +1,4 @@
 {
-    "python.pythonPath": "Backend_Chat\\env\\Scripts\\python.exe",
-    "python.envFile": "${workspaceFolder}\\Backend_Chat\\.env"
+    "python.pythonPath": "backend\\env\\Scripts\\python.exe",
+    "python.envFile": "${workspaceFolder}\\backend\\.env"
 }
