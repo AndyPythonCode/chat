@@ -1,36 +1,77 @@
 import React, { Fragment } from "react";
 import { useParams } from "react-router-dom";
+import axios from "axios";
 
-function Room({ user }) {
+//GLOBAL
+const CONVERSATION = [];
+const ROOMS = [];
+let BACKUP_ROOM;
+
+function Room({ token }) {
+  const client = React.useRef(null);
   let { room_name } = useParams();
-  const client = new WebSocket(`ws://127.0.0.1:8000/ws/chat/${room_name}/`);
-  const out_put = React.useRef();
   const in_put = React.useRef();
+  const [user, setUser] = React.useState({
+    name: "",
+  });
 
-  //se ejecuta después de cada renderizado.
   React.useEffect(() => {
-    client.onopen = () => {
+    client.current = new WebSocket(`ws://127.0.0.1:8000/ws/chat/${room_name}/`);
+
+    client.current.onopen = () => {
       console.log("Connected to Django Services");
+      BACKUP_ROOM = client.current;
     };
+
+    client.current.onclose = () => {
+      console.log("Disconnected to Django Services");
+    };
+
+    //close if open
+    ROOMS.includes(room_name) ? BACKUP_ROOM.close() : ROOMS.push(room_name);
 
     //get message
-    client.onmessage = (Message) => {
+    client.current.onmessage = (Message) => {
       const data = JSON.parse(Message.data);
-      out_put.current.value += `${data.user}: ${data.message} \n`;
+      document.getElementById(
+        "floatingTextarea"
+      ).value += `${data.user}: ${data.message}\n`;
+      CONVERSATION.push({ user: data.user, message: data.message });
+      console.log(CONVERSATION);
     };
-  });
+
+    //current user
+    axios
+      .get("http://127.0.0.1:8000/user/current_user/", {
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+      })
+      .then((res) => {
+        const response = res.data;
+        setUser({
+          name: response.user,
+        });
+      });
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   //set message
   const sendMessage = () => {
     if (in_put.current.value) {
-      client.send(
+      client.current.send(
         JSON.stringify({
           message: in_put.current.value,
-          user: user,
+          user: user.name,
         })
       );
       in_put.current.value = "";
     }
+  };
+
+  const salir = () => {
+    client.current.close();
   };
 
   //KeyCode === 13 is 'ENTER' on the keyboard
@@ -50,7 +91,6 @@ function Room({ user }) {
               style={{ height: "320px", background: "#fff" }}
               className="form-control"
               id="floatingTextarea"
-              ref={out_put}
             ></textarea>
             <label className="text-success" htmlFor="floatingTextarea">
               Chat: <b>{room_name}</b>
@@ -62,7 +102,7 @@ function Room({ user }) {
               id="message-input"
               type="text"
               className="form-control"
-              placeholder="Message..."
+              placeholder="Mensaje..."
               ref={in_put}
               onKeyUp={pressEnter}
             />
@@ -71,7 +111,16 @@ function Room({ user }) {
               type="button"
               id="button-chat"
               onClick={sendMessage}
-              value="Button"
+              value="Enviar Mensaje"
+            />
+          </div>
+          <div className="d-grid gap-2 col-6 mx-auto">
+            <input
+              className="btn btn-outline-danger"
+              type="button"
+              id="button-chat-exit"
+              onClick={salir}
+              value="Salir"
             />
           </div>
         </div>

@@ -1,4 +1,4 @@
-const content = {
+const welcome = {
   inputs: [
     {
       label: "Nombre de la sala",
@@ -9,4 +9,4 @@ const content = {
   ],
 };
 
-export default content;
+export default welcome;

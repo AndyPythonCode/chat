@@ -1,12 +1,13 @@
 import React from "react";
 import Avatar from "@material-ui/core/Avatar";
-import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { useHistory } from "react-router-dom";
-import content from "../../form/Welcome";
+import welcome from "../../form/Welcome";
+import MyInput from "../common/Input";
+import MyButton from "../common/Button";
+import CurrentUser from "../common/CurrentUser";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -35,18 +36,17 @@ const useStyles = makeStyles((theme) => ({
   },
   user: {
     color: "Green",
+    fontWeight: "bold",
   },
 }));
 
-export default function Chat({ user }) {
+export default function Chat({token}) {
+  //Cada navegación hacia adelante o hacia atrás usa el objeto history para navegar a un nuevo componente en una nueva URL:
+  const history = useHistory();
   const classes = useStyles();
-
   const [data, setData] = React.useState({
     room: "",
   });
-
-  //Cada navegación hacia adelante o hacia atrás usa el objeto history para navegar a un nuevo componente en una nueva URL:
-  const history = useHistory();
 
   const inputChange = (input) => {
     setData({
@@ -55,40 +55,24 @@ export default function Chat({ user }) {
     });
   };
 
-  const enterToRoom = () => {
+  const enterToRoom = (e) => {
     history.push(`/chat/${data.room}/`);
+    localStorage.setItem("room", data.room); //Persisten data
+    e.preventDefault();
   };
 
   return (
-    <Container maxWidth="sm">
+    <Container maxWidth="xs">
       <div className={classes.paper}>
         <Avatar className={classes.avatar}></Avatar>
         <Typography component="h1" variant="h5">
-          Bienvenido: <span className={classes.user}>{user}</span>
+          Bienvenido:{" "}
+          <span className={classes.user}>{<CurrentUser token={token} />}</span>
         </Typography>
+
         <form className={classes.form} onSubmit={enterToRoom}>
-          {content.inputs.map((input) => {
-            return (
-              <TextField
-                variant="outlined"
-                margin="normal"
-                fullWidth
-                label={input.label}
-                name={input.name}
-                onChange={inputChange}
-                autoFocus={input.focus}
-                required={input.required}
-              />
-            );
-          })}
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            className={classes.submit}
-          >
-            Entrar
-          </Button>
+          <MyInput inputs={welcome.inputs} onChange={inputChange} />
+          <MyButton type="submit" classes={classes.submit} />
         </form>
       </div>
     </Container>

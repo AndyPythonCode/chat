@@ -14,14 +14,13 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include, re_path
+from django.urls import path, re_path, include
 from django.views.generic import TemplateView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('chat/',include('chat.urls')),
-    path('usuario/',include('user.urls')),
-
-    #Todas la otras url para que react maneja el error 404
+    path('', include('user.urls')),
+    
+    #Todas la otras url de react
     re_path(r'^(?:.*)/?$', TemplateView.as_view(template_name="index.html"))
 ]

@@ -1,0 +1,4 @@
+/users/ - to signup a new user,
+/users/me/ - to get user information,
+/token/login/ - to get token,
+/token/logout/ - to logout.
