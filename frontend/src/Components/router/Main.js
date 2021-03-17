@@ -2,12 +2,12 @@ import React from "react";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import ProtectedRouter from "../authentication/ProtectedRouter";
 import Nav from "../dashboard/Nav";
-import Registrar from "../dashboard/Registrar";
 import NotFound from "../dashboard/NotFound";
 import Room from "../chat/Room";
 import Chat from "../chat/Welcome";
-import Login from "../authentication/Login";
+import Login from "../authentication/login";
 import Logout from "../authentication/Logout";
+import Register from "../authentication/Register"
 
 export default function Main() {
   const [token, setToken] = React.useState();
@@ -57,7 +57,7 @@ export default function Main() {
           isAuth={!auth}
           where={"/chat/"}
           path="/"
-          component={() => <Registrar />}
+          component={() => <Register/>}
         />
         <Route component={() => <NotFound />} />
       </Switch>

@@ -80,9 +80,12 @@ TEMPLATES = [
     },
 ]
 
-CORS_ALLOWED_ORIGINS  =  [ 
-    "http://localhost:3000" ,  
-]
+CORS_ORIGIN_ALLOW_ALL = True
+
+#Domains
+CORS_ALLOWED_ORIGINS = (
+    "https://example.com",
+)
 
 WSGI_APPLICATION = 'core.wsgi.application'
 

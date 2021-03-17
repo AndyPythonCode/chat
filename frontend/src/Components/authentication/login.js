@@ -8,6 +8,7 @@ function Login({ setToken }) {
     email: "",
     password: "",
   });
+  const errorForm = React.useRef("")
 
   const onChange = (input) => {
     setForm({
@@ -30,13 +31,14 @@ function Login({ setToken }) {
       })
       .catch((error) => {
         console.log(error);
+        errorForm.current.innerText = "No coinciden!!!!"
       });
   };
 
   return (
     <div className="row justify-content-center">
       <div className="col-md-6">
-        <form>
+        <form onSubmit={onLogin}>
           <div className="mb-3">
             <label htmlFor="exampleInputEmail1" className="form-label">
               Correo Electrónico
@@ -46,6 +48,7 @@ function Login({ setToken }) {
               name="email"
               onChange={onChange}
               className="form-control"
+              required
             />
             <div id="emailHelp" className="form-text">
               Este correo eletrónico no será compartido con nadie.
@@ -60,11 +63,15 @@ function Login({ setToken }) {
               name="password"
               onChange={onChange}
               className="form-control"
+              required
             />
           </div>
-          <button type="button" onClick={onLogin} className="btn btn-primary">
+          <button type="submit" className="btn btn-primary">
             Entrar
           </button>
+          <div>
+            <span ref={errorForm} className="text-danger"/>
+          </div>
         </form>
       </div>
     </div>
